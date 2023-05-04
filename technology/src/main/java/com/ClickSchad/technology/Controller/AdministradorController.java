@@ -3,6 +3,7 @@ import com.ClickSchad.technology.models.Administrador;
 import com.ClickSchad.technology.models.Funcionarios;
 import com.ClickSchad.technology.repository.AdministradorRepository;
 import com.ClickSchad.technology.repository.FuncionariosRepository;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.http.HttpStatus;
@@ -30,9 +31,27 @@ public class AdministradorController {
     public List<Funcionarios> initd(@PathVariable(value = "loja_id") Long lojaId) {
         return funcionariosRepository.findByLojaLojaId(lojaId);
     }
-    @PostMapping (value = "/funcionarios", produces = "application/json")
-    public ResponseEntity<Funcionarios> cadastrar (@RequestBody Funcionarios funcionarios){
+    @PostMapping (value = "/funcionarios/cadastrar", produces = "application/json")
+    public ResponseEntity<Funcionarios> cadastrarFuncionario (@RequestBody Funcionarios funcionarios){
         Funcionarios funcionariosave = funcionariosRepository.save(funcionarios);
         return new ResponseEntity<Funcionarios>(funcionariosave, HttpStatus.CREATED);
     }
+
+    @PutMapping("/funcionarios/editar/{id}")
+    public ResponseEntity<Funcionarios> updateFuncionario(@PathVariable(value = "id") Long funcionarioId,
+                                                          @Valid @RequestBody Funcionarios funcionarioDetails) {
+        Optional<Funcionarios> funcionarioOptional = funcionariosRepository.findById(funcionarioId);
+        if (funcionarioOptional.isPresent()) {
+
+            Funcionarios funcionario = funcionarioOptional.get();
+            funcionario.setFuncionarioNome(funcionarioDetails.getFuncionarioNome());
+            funcionario.setFuncionarioCpf(funcionarioDetails.getFuncionarioCpf());
+
+            Funcionarios updatedFuncionario = funcionariosRepository.save(funcionario);
+            return ResponseEntity.ok(updatedFuncionario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

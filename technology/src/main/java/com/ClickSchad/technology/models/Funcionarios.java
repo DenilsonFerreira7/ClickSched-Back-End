@@ -32,8 +32,8 @@ public class Funcionarios {
     private String funcionarioCpf;
 
 
-    @JsonIgnore
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "loja_id")
     private Loja loja;
 

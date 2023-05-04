@@ -33,6 +33,7 @@ public class Loja {
     private Administrador administrador;
 
     @OneToMany(mappedBy = "loja")
+    @JsonIgnore
     private List<Funcionarios> funcionarios;
     @OneToMany(mappedBy = "loja")
     @JsonIgnore
