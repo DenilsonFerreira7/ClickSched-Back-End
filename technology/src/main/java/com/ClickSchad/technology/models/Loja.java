@@ -1,10 +1,12 @@
 package com.ClickSchad.technology.models;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotEmpty;
 import java.util.List;
 
 @Data
@@ -20,23 +22,27 @@ public class Loja {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "loja_id")
     private long lojaId;
+
+    @NotEmpty(message = "Nome da loja é obrigatório")
     @Column(name = "loja_nome", unique = true)
     private String lojaNome;
+
+    @NotEmpty(message = "Endereço é obrigatório")
     @Column(name = "loja_endereco", unique = true)
     private String lojaEndereco;
+
+    @NotEmpty(message = "Telefone é obrigatório")
     @Column(name = "loja_tel", unique = true)
     private  String lojaTel;
-
 
     @ManyToOne
     @JoinColumn(name = "admin_id")
     private Administrador administrador;
 
     @OneToMany(mappedBy = "loja")
-    @JsonIgnore
     private List<Funcionarios> funcionarios;
+
     @OneToMany(mappedBy = "loja")
-    @JsonIgnore
     private List<Servico> servicos;
 
 }

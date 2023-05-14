@@ -44,7 +44,6 @@ public class Cliente {
     @Column(name = "cliente_data_criacao", nullable = false, updatable = false)
     private Timestamp clienteDataCriacao;
 
-
     @OneToMany(mappedBy = "cliente")
-    private List<Agendamento> agendamentos;
+    private List<Agendamento> agendamento;
 }

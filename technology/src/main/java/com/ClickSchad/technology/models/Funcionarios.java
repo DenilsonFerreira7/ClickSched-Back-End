@@ -1,6 +1,8 @@
 package com.ClickSchad.technology.models;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,15 +28,17 @@ public class Funcionarios {
     @NotEmpty(message = "nome é obrigatorio")
     @Column(name = "funcionario_nome")
     private String funcionarioNome;
-    @CPF
-    @NotEmpty(message = "numero do cpf é obrigatorio")
+
+
+    @NotEmpty(message = "CPF é obrigatório")
+    @CPF(message = "CPF inválido")
     @Column(name = "funcionario_cpf", unique = true)
     private String funcionarioCpf;
 
 
     @ManyToOne
-    @JsonIgnore
     @JoinColumn(name = "loja_id")
+    @JsonIgnore
     private Loja loja;
 
 

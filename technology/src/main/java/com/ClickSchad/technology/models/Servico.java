@@ -25,13 +25,7 @@ public class Servico {
     private BigDecimal servicoPreco;
     @Column(name = "servico_descricao")
     private String servicoDescricao;
-
-
     @ManyToOne
     @JoinColumn(name = "loja_id")
     private Loja loja;
-
-
-
-
 }

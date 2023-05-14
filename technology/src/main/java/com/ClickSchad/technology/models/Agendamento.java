@@ -16,17 +16,31 @@ import java.sql.Timestamp;
 public class Agendamento {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long agendamento_id;
-    private Timestamp agendamento_horario;
-    private String agendamento_observacao;
-    private String agendamento_status;
-    private Timestamp agendamento_data_criacao;
+    @Column(name = "agendamento_id")
+    private long agendamentoId;
+
+
+
+    @Column(name = "agendamentoStatus")
+    private String agendamentoStatus;
+
+    @Column(name = "agendamento_data_criacao")
+    private Timestamp agendamentoDataCriacao;
 
     @ManyToOne
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
+
     @ManyToOne
     @JoinColumn(name = "select_servico_id")
-    private Select_servico select_servico;
+    private Select_servico selectServico;
 
+
+    @ManyToOne
+    @JoinColumn(name = "loja_id")
+    private Loja loja;
+
+    @ManyToOne
+    @JoinColumn(name = "funcionario_id")
+    private Funcionarios funcionarios;
 }
