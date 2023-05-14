@@ -46,14 +46,14 @@ public class AdministradorController {
 
     // EDITAR ADM
     @PutMapping("/editar/{id}")
-    public ResponseEntity<Administrador> editarAdministradorById (@PathVariable(value = "id") Long id,
-                                                          @Valid @RequestBody AdministradorDTO administradorDTO) {
+    public ResponseEntity<Administrador> editarAdministradorById(@PathVariable(value = "id") Long id,
+                                                                 @Valid @RequestBody AdministradorDTO administradorDTO) {
         Optional<Administrador> administradorOptional = administradorRepository.findById(id);
 
         if (administradorOptional.isPresent()) {
             ModelMapper modelMapperEditFunc = new ModelMapper();
             Administrador administrador = administradorOptional.get();
-            modelMapper.map(administradorDTO,administrador);
+            modelMapper.map(administradorDTO, administrador);
             Administrador upfateAdm = administradorRepository.save(administrador);
             return ResponseEntity.ok(upfateAdm);
         } else {
@@ -62,9 +62,9 @@ public class AdministradorController {
     }
 
 
-// CONSULTAR FUNCIONARIOS DA LOJA
+    // CONSULTAR FUNCIONARIOS DA LOJA
     @GetMapping(value = "/funcionarios/{loja_id}", produces = "application/json")
-    public List<FuncionariosDTO> consultarFuncionario (@PathVariable(value = "loja_id") Long lojaId) {
+    public List<FuncionariosDTO> consultarFuncionario(@PathVariable(value = "loja_id") Long lojaId) {
         List<Funcionarios> funcionariosList = funcionariosRepository.findByLojaLojaId(lojaId);
         List<FuncionariosDTO> funcionariosDTOList = funcionariosList.stream()
                 .map(funcionarios -> modelMapper.map(funcionarios, FuncionariosDTO.class))
@@ -74,9 +74,9 @@ public class AdministradorController {
     }
 
 
-// CADASTRAR FUNCIONARIOS
-    @PostMapping (value = "/funcionarios/cadastrar", produces = "application/json")
-    public ResponseEntity<Funcionarios> cadastrarFuncionario (@RequestBody FuncionariosDTO funcionariosDTO){
+    // CADASTRAR FUNCIONARIOS
+    @PostMapping(value = "/funcionarios/cadastrar", produces = "application/json")
+    public ResponseEntity<Funcionarios> cadastrarFuncionario(@RequestBody FuncionariosDTO funcionariosDTO) {
         ModelMapper modelMapperCadastrarFuncionario = new ModelMapper();
         Funcionarios funcionarios = modelMapper.map(funcionariosDTO, Funcionarios.class);
         Funcionarios funcionariosave = funcionariosRepository.save(funcionarios);
@@ -84,21 +84,35 @@ public class AdministradorController {
     }
 
 
-// EDITAR FUNCIONARIO
+    // EDITAR FUNCIONARIO
     @PutMapping("/funcionarios/editar/{id}")
     public ResponseEntity<Funcionarios> editarFuncionario(
-        @PathVariable(value = "id") Long funcionarioId,
-        @Valid @RequestBody FuncionariosDTO funcionariosDTO) {
-    Optional<Funcionarios> funcionarioOptional = funcionariosRepository.findById(funcionarioId);
+            @PathVariable(value = "id") Long funcionarioId,
+            @Valid @RequestBody FuncionariosDTO funcionariosDTO) {
+        Optional<Funcionarios> funcionarioOptional = funcionariosRepository.findById(funcionarioId);
 
-    if (funcionarioOptional.isPresent()) {
-        Funcionarios funcionarios = funcionarioOptional.get();
-        funcionarios.setFuncionarioNome(funcionariosDTO.getFuncionarioNome());
-        funcionarios.setFuncionarioCpf(funcionariosDTO.getFuncionarioCpf());
-        Funcionarios updatedFuncionario = funcionariosRepository.save(funcionarios);
-        return ResponseEntity.ok(updatedFuncionario);
-    } else {
-        return ResponseEntity.notFound().build();
+        if (funcionarioOptional.isPresent()) {
+            Funcionarios funcionarios = funcionarioOptional.get();
+            funcionarios.setFuncionarioNome(funcionariosDTO.getFuncionarioNome());
+            funcionarios.setFuncionarioCpf(funcionariosDTO.getFuncionarioCpf());
+            Funcionarios updatedFuncionario = funcionariosRepository.save(funcionarios);
+            return ResponseEntity.ok(updatedFuncionario);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
-}
+
+
+    //DELETA FUNCIONARIO
+    @DeleteMapping("/funcionarios/deletar/{id}")
+    public ResponseEntity<?> deletarFuncionario(@PathVariable(value = "id") Long id) {
+        Optional<Funcionarios> funcionarioOptional = funcionariosRepository.findById(id);
+
+        if (funcionarioOptional.isPresent()) {
+            funcionariosRepository.deleteById(id);
+            return ResponseEntity.ok().build();
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
