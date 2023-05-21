@@ -1,5 +1,4 @@
 package com.ClickSchad.technology.dto;
-import com.ClickSchad.technology.models.Loja;
 import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,7 +15,6 @@ public class FuncionariosDTO implements Serializable {
 
     private String funcionarioNome;
     private String funcionarioCpf;
-    private Loja loja;
 
 }
 

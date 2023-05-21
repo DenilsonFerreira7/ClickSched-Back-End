@@ -50,8 +50,8 @@ public class Administrador {
     @Column(name = "admin_telefone", unique = true)
     private String adminTelefone;
 
-    @CreationTimestamp
-    @Column(name = "admin_data_criacao", nullable = false, updatable = false)
+    @Column(name = "admin_data_criacao", updatable = false,
+            columnDefinition = "TIMESTAMP DEFAULT CURRENT_TIMESTAMP")
     private Timestamp adminDataCriacao;
 
     @OneToMany(mappedBy = "administrador")
