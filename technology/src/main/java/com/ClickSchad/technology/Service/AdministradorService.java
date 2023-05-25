@@ -1,6 +1,7 @@
-package com.ClickSchad.technology.Service;
+package com.ClickSchad.technology.service;
 import com.ClickSchad.technology.dto.AdministradorDTO;
 import com.ClickSchad.technology.dto.FuncionariosDTO;
+import com.ClickSchad.technology.exeptions.NotFoundExeption;
 import com.ClickSchad.technology.models.Administrador;
 import com.ClickSchad.technology.models.Funcionarios;
 import com.ClickSchad.technology.repository.AdministradorRepository;
@@ -10,7 +11,6 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -42,7 +42,7 @@ class AdministradorService {
 
     public Administrador editarAdministrador(long adminId, AdministradorDTO administradorDto) {
         Administrador administrador = administradorRepository.findById(adminId)
-                .orElseThrow(() -> new NoSuchElementException("Administrador não encontrado"));
+                .orElseThrow(() -> new NotFoundExeption ("Administrador não encontrado"+ adminId));
 
         administrador.setAdminLogin(administradorDto.getAdminLogin());
         administrador.setAdminSenha(administradorDto.getAdminSenha());
@@ -62,10 +62,15 @@ class AdministradorService {
                 .collect(Collectors.toList());
     }
 
+
     public Funcionarios cadastrarFuncionario(Funcionarios funcionariosDTO) {
         Funcionarios funcionarios = modelMapper.map(funcionariosDTO, Funcionarios.class);
+        if(funcionarios == null)
+            throw  new NotFoundExeption("Erro ao cadastrar");
         return funcionariosRepository.save(funcionarios);
+
     }
+
 
     public Funcionarios editarFuncionario(Long funcionarioId, FuncionariosDTO funcionariosDTO) {
         Optional<Funcionarios> funcionarioOptional = funcionariosRepository.findById(funcionarioId);
@@ -73,10 +78,16 @@ class AdministradorService {
             funcionarios.setFuncionarioNome(funcionariosDTO.getFuncionarioNome());
             funcionarios.setFuncionarioCpf(funcionariosDTO.getFuncionarioCpf());
             return funcionariosRepository.save(funcionarios);
-        }).orElse(null);
+        }).orElseThrow(() -> new NotFoundExeption ("Funcionario não encontrado"));
     }
 
-    public void deletarFuncionario(Long id) {
-        funcionariosRepository.deleteById(id);
+
+    public Funcionarios deletarFuncionario(Long funcionarioId) {
+        Funcionarios funcionarioDeletado = funcionariosRepository.findById(funcionarioId).orElse(null);
+        if (funcionarioDeletado != null) {
+            throw new NotFoundExeption("Esse funcionário não existe: " + funcionarioId);
+        }
+        funcionariosRepository.delete(funcionarioDeletado);
+        return funcionarioDeletado;
     }
 }

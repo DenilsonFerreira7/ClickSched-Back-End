@@ -1,9 +1,6 @@
 package com.ClickSchad.technology.models;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -18,7 +15,10 @@ public class Funcionarios {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "funcionario_id")
     private long funcionarioId;
+
+
     @NotEmpty(message = "nome é obrigatorio")
     @Column(name = "funcionario_nome")
     private String funcionarioNome;

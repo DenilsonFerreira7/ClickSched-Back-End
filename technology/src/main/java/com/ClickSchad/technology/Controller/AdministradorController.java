@@ -1,6 +1,6 @@
 package com.ClickSchad.technology.controller;
-import com.ClickSchad.technology.Service.AdministradorService;
-import com.ClickSchad.technology.Service.LojaService;
+import com.ClickSchad.technology.service.AdministradorService;
+import com.ClickSchad.technology.service.LojaService;
 import com.ClickSchad.technology.dto.AdministradorDTO;
 import com.ClickSchad.technology.dto.FuncionariosDTO;
 import com.ClickSchad.technology.models.Administrador;
@@ -18,6 +18,7 @@ import java.util.List;
 @RequestMapping(value = "/admin")
 public class AdministradorController {
 
+
     private final AdministradorService administradorService;
     private final LojaService lojaService;
 
@@ -27,14 +28,16 @@ public class AdministradorController {
         this.lojaService = lojaService;
     }
 
+
     // CONSULTAR CADASTRO DO ADMIN
     @GetMapping(value = "/{id}", produces = "application/json")
     public ResponseEntity<AdministradorDTO> consultarProfileAdmin(@PathVariable(value = "id") Long id) {
         AdministradorDTO administradorDTO = administradorService.consultarProfileAdmin(id);
-        return administradorDTO != null
-                ? new ResponseEntity<>(administradorDTO, HttpStatus.OK)
-                : new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(administradorDTO, HttpStatus.OK);
+
     }
+
+
 //EDITAR ADM
     @PutMapping("/editar/{adminId}")
     public ResponseEntity<String> editarAdministrador(
@@ -43,15 +46,15 @@ public class AdministradorController {
         return ResponseEntity.status(HttpStatus.CREATED).body("ADMINISTRADOR EDITADO COM SUCESSO");
     }
 
+
 // LOJA
     @PostMapping("/criarloja")
-    public ResponseEntity<Loja> criarLoja(@Valid @RequestBody Loja loja) {
+    public ResponseEntity<String> criarLoja(@Valid @RequestBody Loja loja) {
         Loja criarLoja = lojaService.criarLoja(loja.getLojaNome(), loja.getLojaEndereco(), loja.getLojaTel());
-        return loja != null
-                ? ResponseEntity.ok(loja)
-                : ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body("LOJA CRIADA COM SUCESSO");
 
     }
+
 
     // CONSULTAR FUNCIONARIOS DA LOJA
     @GetMapping(value = "/funcionarios/{loja_id}", produces = "application/json")
@@ -60,35 +63,32 @@ public class AdministradorController {
         return new ResponseEntity<>(funcionariosDTOList, HttpStatus.OK);
     }
 
+
     // CADASTRAR FUNCIONARIOS
     @PostMapping(value = "/funcionarios/cadastrar", produces = "application/json")
     public ResponseEntity<String> cadastrarFuncionario(@RequestBody Funcionarios funcionarios) {
         Funcionarios cadastrarFuncionario = administradorService.cadastrarFuncionario(funcionarios);
-        if (cadastrarFuncionario != null) {
             return ResponseEntity.status(HttpStatus.CREATED).body("Funcionário cadastrado com sucesso");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Erro ao cadastrar funcionário");
         }
-    }
+
 
     // EDITAR FUNCIONARIO
     @PutMapping("/funcionarios/editar/{id}")
     public ResponseEntity<String> editarFuncionario(
             @PathVariable(value = "id") Long funcionarioId,
             @Valid @RequestBody FuncionariosDTO funcionariosDTO) {
-        Funcionarios funcionarios = administradorService.editarFuncionario(funcionarioId, funcionariosDTO);
-        if (funcionarios != null) {
-            return ResponseEntity.status(HttpStatus.CREATED).body("Funcionario foi editado com sucesso !!");
-        } else {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("erro");
-        }
+        Funcionarios funcionario = administradorService.editarFuncionario(funcionarioId, funcionariosDTO);
+        String nomeFuncionarioEditado = funcionario.getFuncionarioNome();
+            return ResponseEntity.status(HttpStatus.CREATED).body("O funcionario " +nomeFuncionarioEditado+ " foi editado com sucesso !!");
+
     }
+
 
     // DELETA FUNCIONARIO
-    @DeleteMapping("/funcionarios/deletar/{id}")
-    public ResponseEntity<?> deletarFuncionario(@PathVariable(value = "id") Long id) {
-        administradorService.deletarFuncionario(id);
-        return ResponseEntity.ok().build();
+    @DeleteMapping("/funcionarios/deletar/{funcionario_id}")
+    public ResponseEntity<?> deletarFuncionario(@PathVariable(value = "funcionario_id") Long funcionarioId) {
+        Funcionarios funcionarioDeletado = administradorService.deletarFuncionario(funcionarioId);
+        String nomeFuncionario = funcionarioDeletado.getFuncionarioNome();
+        return ResponseEntity.status(HttpStatus.OK).body("Funcionario " + nomeFuncionario + " deletado");
     }
-
 }
