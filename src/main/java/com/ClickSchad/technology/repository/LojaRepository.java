@@ -1,5 +1,4 @@
 package com.ClickSchad.technology.repository;
-
 import com.ClickSchad.technology.models.Loja;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

@@ -7,11 +7,11 @@ import com.ClickSchad.technology.models.Administrador;
 import com.ClickSchad.technology.models.Funcionarios;
 import com.ClickSchad.technology.models.Loja;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
-
 
 
 @RestController
@@ -19,15 +19,19 @@ import java.util.List;
 public class AdministradorController {
 
 
+    @Autowired
     private final AdministradorService administradorService;
+    @Autowired
     private final LojaService lojaService;
+
+
 
 
     public AdministradorController(AdministradorService administradorService, LojaService lojaService) {
         this.administradorService = administradorService;
         this.lojaService = lojaService;
-    }
 
+    }
 
     // CONSULTAR CADASTRO DO ADMIN
     @GetMapping(value = "/{id}", produces = "application/json")
